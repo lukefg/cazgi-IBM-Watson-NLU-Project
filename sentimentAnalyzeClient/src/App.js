@@ -92,7 +92,12 @@ class App extends React.Component {
             {this.state.sentimentOutput}
       </div>
     );
-    }
+  }
+
+  componentDidMount() {
+    document.title = "Sentiment Analyzer";
+  }
+
 }
 
 export default App;
