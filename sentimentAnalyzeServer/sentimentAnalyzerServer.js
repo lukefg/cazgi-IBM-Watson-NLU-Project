@@ -28,23 +28,121 @@ app.use(cors_app());
 
 app.get("/",(req,res)=>{
     res.render('index.html');
-  });
+});
 
 app.get("/url/emotion", (req,res) => {
 
-    return res.send({"happy":"90","sad":"10"});
+    console.log("A client pinged server endpoint /url/emotion with query " + req.query.url);
+    console.log("Now constructing request body for IBM API...");
+
+    const analyzeParams = {
+        "url": req.query.url,
+        "features": {
+          "emotion": {}
+        }
+    };
+
+    console.log("Getting object instance of Natural Language Understanding service...");
+    let ibm = getNLUInstance();
+
+    console.log("Submitting parameters for analysis...");
+    ibm.analyze(analyzeParams)
+        .then(analysisResults => {
+            console.log("Response received.")
+            let emotion = JSON.stringify(analysisResults.result.emotion.document.emotion);
+            console.log("Document sentiment is " + emotion);
+            console.log("Responding to client...");
+            return res.send(emotion);
+        })
+        .catch(err => {
+            return res.send(`error: ${err}`);
+        });
+
 });
 
 app.get("/url/sentiment", (req,res) => {
-    return res.send("url sentiment for "+req.query.url);
+
+    console.log("A client pinged server endpoint /url/sentiment with query " + req.query.url);
+    console.log("Now constructing request body for IBM API...");
+
+    const analyzeParams = {
+        "url": req.query.url,
+        "features": {
+          "sentiment": {}
+        }
+    };
+
+    console.log("Getting object instance of Natural Language Understanding service...");
+    let ibm = getNLUInstance();
+
+    console.log("Submitting parameters for analysis...");
+    ibm.analyze(analyzeParams)
+        .then(analysisResults => {
+            console.log("Response received.")
+            let sentiment = analysisResults.result.sentiment.document.label;
+            console.log("Document sentiment is " + sentiment);
+            console.log("Responding to client...");
+            return res.send(sentiment);
+        })
+        .catch(err => {
+            return res.send(`error: ${err}`);
+        });
 });
 
 app.get("/text/emotion", (req,res) => {
-    return res.send({"happy":"10","sad":"90"});
+    console.log("A client pinged server endpoint /text/emotion with query " + req.query.text);
+    console.log("Now constructing request body for IBM API...");
+
+    const analyzeParams = {
+        "text": req.query.text,
+        "features": {
+          "emotion": {}
+        }
+    };
+
+    console.log("Getting object instance of Natural Language Understanding service...");
+    let ibm = getNLUInstance();
+
+    console.log("Submitting parameters for analysis...");
+    ibm.analyze(analyzeParams)
+        .then(analysisResults => {
+            console.log("Response received.")
+            let emotion = JSON.stringify(analysisResults.result.emotion.document.emotion);
+            console.log("Document sentiment is " + emotion);
+            console.log("Responding to client...");
+            return res.send(emotion);
+        })
+        .catch(err => {
+            return res.send(`error: ${err}`);
+        });
 });
 
 app.get("/text/sentiment", (req,res) => {
-    return res.send("text sentiment for "+req.query.text);
+    console.log("A client pinged server endpoint /text/sentiment with query " + req.query.text);
+    console.log("Now constructing request body for IBM API...");
+
+    const analyzeParams = {
+        "text": req.query.text,
+        "features": {
+          "sentiment": {}
+        }
+    };
+
+    console.log("Getting object instance of Natural Language Understanding service...");
+    let ibm = getNLUInstance();
+
+    console.log("Submitting parameters for analysis...");
+    ibm.analyze(analyzeParams)
+        .then(analysisResults => {
+            console.log("Response received.")
+            let sentiment = analysisResults.result.sentiment.document.label;
+            console.log("Document sentiment is " + sentiment);
+            console.log("Responding to client...");
+            return res.send(sentiment);
+        })
+        .catch(err => {
+            return res.send(`error: ${err}`);
+        });
 });
 
 let server = app.listen(8080, () => {
